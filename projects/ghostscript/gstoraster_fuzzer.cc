@@ -91,7 +91,7 @@ static int gs_to_raster_fuzz(const unsigned char *buf, size_t size)
 	return 0;
 }
 
-int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 	gs_to_raster_fuzz(data, size);
 	return 0;
 }

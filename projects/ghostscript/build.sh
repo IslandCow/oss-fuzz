@@ -31,5 +31,3 @@ $CXX $CXXFLAGS -std=c++11 -I. \
     fuzz/gstoraster_fuzzer.cc \
     -o $OUT/gstoraster_fuzzer \
     $LIB_FUZZING_ENGINE bin/gs.a
-
-cp *_fuzzer $OUT/
