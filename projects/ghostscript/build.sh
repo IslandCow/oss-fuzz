@@ -14,6 +14,20 @@
 # limitations under the License.
 #
 ################################################################################
+
+# Build CUPS
+pushd cups
+# Fix bad line
+sed -i '2110s/f->value/(int)f->value/' cups/ppd-cache.c
+
+./configure --enable-static --disable-gnutls --disable-shared \
+   --disable-libusb --with-components=core
+
+make clean
+make install-headers install-libs
+popd
+
+cd ghostpdl
 rm -r cups/libs || die
 rm -r freetype || die
 rm -r libpng || die
@@ -21,22 +35,16 @@ rm -r tiff || die
 rm -r zlib || die
 
 autoconf
-./configure --enable-dynamic --enable-freetype --enable-fontconfig \
+./configure --enable-freetype --enable-fontconfig \
   --enable-cups --with-ijs --with-jbig2dec \
-  --with-drivers=cups,ljet4,laserjet,pxlmono,plxcolor,pcl3,uniprint
-make
+  --with-drivers=cups,ljet4,laserjet,pxlmono,pxlcolor,pcl3,uniprint
+make -j4 libgs
 
-pushd ijs
-./configure --enable-shared
-make
-popd
-
-make install
-
-pushd ijs
-make install
-popd
-
-cd ../chromiumos-overlay/chromeos-base/ghostscript-fuzz/files/
-make
-cp *_fuzzer $OUT/
+$CXX $CXXFLAGS -std=c++11 -I. \
+    fuzz/gstoraster_fuzzer.cc \
+    -o $OUT/gstoraster_fuzzer \
+    /usr/lib/libcups.a \
+    /usr/lib/libcupsimage.a \
+    /usr/lib/x86_64-linux-gnu/libz.a \
+    /usr/lib/x86_64-linux-gnu/libpthread.a \
+    $LIB_FUZZING_ENGINE bin/gs.a

@@ -17,12 +17,11 @@
 FROM gcr.io/oss-fuzz-base/base-builder
 MAINTAINER skau@google.com
 
-RUN apt-get update && apt-get install -y autoconf zlibc libcups2-dev libfreetype6-dev libpng-dev libtiff-dev libcupsimage2-dev
-
-RUN git clone http://git.ghostscript.com/ghostpdl.git ghostpdl
-RUN git clone https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay chromiumos-overlay
+RUN apt-get update && apt-get install -y autoconf zlibc liblcms2-dev libfreetype6-dev libpng-dev libtiff-dev
+RUN git clone --branch branch-2.2 --single-branch --depth 1 https://github.com/apple/cups.git cups
+RUN git clone --single-branch --depth 1 git://git.ghostscript.com/ghostpdl.git ghostpdl
 
 RUN mkdir ghostpdl/fuzz
+COPY gstoraster_fuzzer.cc ghostpdl/fuzz
 
-WORKDIR ghostpdl
 COPY build.sh $SRC/
