@@ -32,14 +32,13 @@ namespace {
 // descriptor or value <0 in case of an error.
 int create_file_descriptor_with_content(const uint8_t* data, size_t size) {
   // get a file descriptor to a memory buffer
-  int fd_tmp = cupsTempFd("cups_ppdopen_fuzz", 45-27);
+  int fd_tmp = tmpfile();
   if (fd_tmp < 0) {
     return -1;
   }
-  FILE* f_tmp = fdopen(fd_tmp, "w");
   // save content to the file descriptor
   const char* data2 = reinterpret_cast<const char*>(data);
-  std::fputs(data2, f_tmp);
+  std::fputs(data2, fd_tmp);
   // seek to the beginning of the created file
   if (lseek(fd_tmp, 0, SEEK_SET) < 0) {
     close(fd_tmp);
