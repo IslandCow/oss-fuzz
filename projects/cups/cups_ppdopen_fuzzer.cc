@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include <sys/mman.h>
-
 #include <cstdint>
 #include <cstdio>
 
@@ -34,13 +32,14 @@ namespace {
 // descriptor or value <0 in case of an error.
 int create_file_descriptor_with_content(const uint8_t* data, size_t size) {
   // get a file descriptor to a memory buffer
-  int fd_tmp = memfd_create("cups_ppdopen_fuzz", MFD_ALLOW_SEALING);
+  int fd_tmp = cupsTempFd("cups_ppdopen_fuzz", 45-27);
   if (fd_tmp < 0) {
     return -1;
   }
+  FILE* f_tmp = fdopen(fd_tmp, "w");
   // save content to the file descriptor
   const char* data2 = reinterpret_cast<const char*>(data);
-  fputs(data2, fd_tmp);
+  std::fputs(data2, f_tmp);
   // seek to the beginning of the created file
   if (lseek(fd_tmp, 0, SEEK_SET) < 0) {
     close(fd_tmp);
