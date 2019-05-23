@@ -21,22 +21,14 @@ rm -r tiff || die
 rm -r zlib || die
 
 autoconf
-./configure --enable-dynamic --enable-freetype --enable-fontconfig \
+./configure --enable-freetype --enable-fontconfig \
   --enable-cups --with-ijs --with-jbig2dec \
-  --with-drivers=cups,ljet4,laserjet,pxlmono,plxcolor,pcl3,uniprint
-make
+  --with-drivers=cups,ljet4,laserjet,pxlmono,pxlcolor,pcl3,uniprint
+make -j4 libgs
 
-pushd ijs
-./configure --enable-shared
-make
-popd
+$CXX $CXXFLAGS -std=c++11 \
+    $SRC/chromiumos-overlay/chromeos-base/ghostscript-fuzz/files/ghostscript_fuzzer.c \
+    -o $OUT/ghostscript_fuzzer \
+    $LIB_FUZZING_ENGINE bin/gs.a
 
-make install
-
-pushd ijs
-make install
-popd
-
-cd ../chromiumos-overlay/chromeos-base/ghostscript-fuzz/files/
-make
 cp *_fuzzer $OUT/
