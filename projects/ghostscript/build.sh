@@ -27,7 +27,10 @@ autoconf
 make -j4 libgs
 
 $CXX $CXXFLAGS -std=c++11 -I. \
-    -lz -lcups -lpthread -lcupsimage \
     fuzz/gstoraster_fuzzer.cc \
     -o $OUT/gstoraster_fuzzer \
+    /usr/lib/x86_64-linux-gnu/libcups.a \
+    /usr/lib/x86_64-linux-gnu/libcupsimage.a \
+    /usr/lib/x86_64-linux-gnu/libz.a \
+    /usr/lib/x86_64-linux-gnu/libpthread.a \
     $LIB_FUZZING_ENGINE bin/gs.a
