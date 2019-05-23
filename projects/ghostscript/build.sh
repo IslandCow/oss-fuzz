@@ -26,10 +26,9 @@ autoconf
   --with-drivers=cups,ljet4,laserjet,pxlmono,pxlcolor,pcl3,uniprint
 make -j4 libgs
 
-mv  ../chromiumos-overlay/chromeos-base/ghostscript-fuzz/files/gstoraster_fuzzer.c gstoraster_fuzzer.cc
-
-$CXX $CXXFLAGS -std=c++11 \
-    gstoraster_fuzzer.cc \
+$CXX $CXXFLAGS -std=c++11 -I. \
+    -lz -lcups -lpthread -lcupsimage \
+    fuzz/gstoraster_fuzzer.cc \
     -o $OUT/gstoraster_fuzzer \
     $LIB_FUZZING_ENGINE bin/gs.a
 
