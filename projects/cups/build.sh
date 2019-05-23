@@ -1,5 +1,5 @@
 #!/bin/bash
-./buildconf.sh
-./configure
+
+./configure --enable-static --disable-shared --enable-sanitizer --disable-libusb --with-components=libcupslite
 make clean
-make
+make install-libs
