@@ -17,7 +17,7 @@
 FROM gcr.io/oss-fuzz-base/base-builder
 MAINTAINER skau@google.com
 
-RUN apt-get update && apt-get install -y autoconf zlibc libcups2-dev libfreetype6-dev libpng-dev libtiff-dev
+RUN apt-get update && apt-get install -y autoconf zlibc libcups2-dev libfreetype6-dev libpng-dev libtiff-dev libcupsimage2-dev
 
 RUN git clone http://git.ghostscript.com/ghostpdl.git ghostpdl
 RUN git clone https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay chromiumos-overlay
