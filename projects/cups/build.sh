@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Fix bad line
+sed -i '2110s/f->value/(int)f->value/' cups/ppd-cache.c
+
 ./configure --enable-static --disable-gnutls --disable-shared \
    --disable-libusb --with-components=core
 

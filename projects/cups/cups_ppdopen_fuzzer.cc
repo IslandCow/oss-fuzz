@@ -32,13 +32,14 @@ namespace {
 // descriptor or value <0 in case of an error.
 int create_file_descriptor_with_content(const uint8_t* data, size_t size) {
   // get a file descriptor to a memory buffer
-  int fd_tmp = tmpfile();
+  FILE* f_tmp = tmpfile();
+  int fd_tmp = fileno(f_tmp);
   if (fd_tmp < 0) {
     return -1;
   }
   // save content to the file descriptor
   const char* data2 = reinterpret_cast<const char*>(data);
-  std::fputs(data2, fd_tmp);
+  std::fwrite(data2, sizeof(uint8_t), size, f_tmp);
   // seek to the beginning of the created file
   if (lseek(fd_tmp, 0, SEEK_SET) < 0) {
     close(fd_tmp);
