@@ -7,7 +7,6 @@
 #include <cstdint>
 #include <cstdio>
 
-#include <base/files/file_util.h>
 #include <cups/ppd.h>
 
 // This section contains fragments of ppd-private.h and language-private.h
@@ -41,10 +40,7 @@ int create_file_descriptor_with_content(const uint8_t* data, size_t size) {
   }
   // save content to the file descriptor
   const char* data2 = reinterpret_cast<const char*>(data);
-  if (!base::WriteFileDescriptor(fd_tmp, data2, size)) {
-    close(fd_tmp);
-    return -2;
-  }
+  fputs(data2, fd_tmp);
   // seek to the beginning of the created file
   if (lseek(fd_tmp, 0, SEEK_SET) < 0) {
     close(fd_tmp);
