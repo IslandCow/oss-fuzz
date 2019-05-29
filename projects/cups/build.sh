@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Build CUPS
 # Fix bad line
 sed -i '2110s/f->value/(int)f->value/' cups/ppd-cache.c
 

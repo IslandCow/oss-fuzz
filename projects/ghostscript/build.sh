@@ -14,6 +14,20 @@
 # limitations under the License.
 #
 ################################################################################
+
+# Build CUPS
+pushd cups
+# Fix bad line
+sed -i '2110s/f->value/(int)f->value/' cups/ppd-cache.c
+
+./configure --enable-static --disable-gnutls --disable-shared \
+   --disable-libusb --with-components=core
+
+make clean
+make install-headers install-libs
+popd
+
+cd ghostpdl
 rm -r cups/libs || die
 rm -r freetype || die
 rm -r libpng || die
@@ -29,8 +43,8 @@ make -j4 libgs
 $CXX $CXXFLAGS -std=c++11 -I. \
     fuzz/gstoraster_fuzzer.cc \
     -o $OUT/gstoraster_fuzzer \
-    /usr/lib/x86_64-linux-gnu/libcups.a \
-    /usr/lib/x86_64-linux-gnu/libcupsimage.a \
+    /usr/lib/libcups.a \
+    /usr/lib/libcupsimage.a \
     /usr/lib/x86_64-linux-gnu/libz.a \
     /usr/lib/x86_64-linux-gnu/libpthread.a \
     $LIB_FUZZING_ENGINE bin/gs.a
